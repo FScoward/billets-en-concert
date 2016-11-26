@@ -9,6 +9,7 @@ GET     /callback                   controllers.SignInController.callback
 GET     /live/:liveId                controllers.LiveController.find(liveId: Long)
 POST    /live                        controllers.LiveController.create
 
+GET     /artist                      controllers.ArtistController.list
 POST    /artist                      controllers.ArtistController.register
 
 POST    /place                       controllers.PlaceController.register

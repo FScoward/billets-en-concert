@@ -28,8 +28,12 @@ class ArtistController @Inject() (
       for {
         valid <- EitherT(Future.successful(read))
         artist <- EitherT(artistService.register(valid))
-      } yield (ArtistResponse(artist.id, artist.name))
+      } yield (ArtistResponse(artist.id.toString, artist.name))
 
     result.toResult
+  }
+
+  def list() = Action.async { implicit request =>
+    EitherT(artistService.list()).toResult
   }
 }

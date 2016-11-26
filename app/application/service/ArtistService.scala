@@ -3,7 +3,7 @@ package application.service
 import java.sql.SQLIntegrityConstraintViolationException
 import javax.inject.{ Inject, Singleton }
 
-import controllers.model.ArtistRequest
+import controllers.model.{ ArtistRequest, ArtistResponse }
 import domain.model.Artist
 import infrastructure.repository.ArtistRepositoryJDBC
 import play.api.data.validation.Invalid
@@ -29,5 +29,10 @@ class ArtistService @Inject() (
       case e: SQLIntegrityConstraintViolationException => Invalid("duplicate").left
       case e => throw e
     }
+  }
+
+  def list()(implicit ec: ExecutionContext) = {
+    // TODO responseへの変換はcontroller ?
+    db.run(artistRepositoryJDBC.list).map(_.map(a => ArtistResponse(a.id.toString, a.name)).right[Invalid])
   }
 }

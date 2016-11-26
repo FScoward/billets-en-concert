@@ -6,7 +6,7 @@ import play.api.libs.json.Json
  * Created by Fumiyasu on 2016/11/23.
  */
 case class ArtistRequest(name: String)
-case class ArtistResponse(id: Long, name: String)
+case class ArtistResponse(id: String, name: String)
 
 object ArtistRequest {
   implicit val reads = Json.reads[ArtistRequest]

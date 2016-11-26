@@ -15,4 +15,11 @@ class ArtistRepositoryJDBC {
   def register(artist: Artist)(implicit ec: ExecutionContext): DBIO[Int] = {
     Artists += ArtistsRow(artist.id, artist.name)
   }
+
+  // TODO: limit offset
+  def list(implicit ec: ExecutionContext): DBIO[Seq[Artist]] = {
+    Artists
+      .result
+      .map(_.map(row => Artist(row.artistId, row.artistName)))
+  }
 }
