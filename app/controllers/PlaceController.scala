@@ -29,8 +29,8 @@ class PlaceController @Inject() (
 
     val result = for {
       valid <- EitherT(Future.successful(read))
-      id <- EitherT(placeService.register(valid))
-    } yield Json.obj("placeId" -> id.toString)
+      place <- EitherT(placeService.register(valid))
+    } yield Json.obj("placeId" -> place.id.toString)
 
     result.toResult
   }

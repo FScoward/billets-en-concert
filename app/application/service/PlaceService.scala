@@ -9,7 +9,7 @@ import infrastructure.repository.PlaceRepository
 import play.api.data.validation.Invalid
 import play.api.db.slick.{ DatabaseConfigProvider, HasDatabaseConfigProvider }
 import slick.driver.JdbcProfile
-import util.Logging
+import util.{ Id64, Logging }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scalaz.Scalaz._
@@ -23,9 +23,9 @@ class PlaceService @Inject() (
     placeRepository: PlaceRepository,
     val dbConfigProvider: DatabaseConfigProvider
 ) extends HasDatabaseConfigProvider[JdbcProfile] with Logging {
-  def register(placeRequest: PlaceRequest)(implicit ec: ExecutionContext): Future[Invalid \/ Long] = {
-    val place = Place(placeRequest.name, placeRequest.address)
-    db.run(placeRepository.register(place)).map(_.right).recover {
+  def register(placeRequest: PlaceRequest)(implicit ec: ExecutionContext): Future[Invalid \/ Place] = {
+    val place = Place(Id64.nextAscId(), placeRequest.name, placeRequest.address)
+    db.run(placeRepository.register(place)).map(_ => place.right).recover {
       case e: SQLIntegrityConstraintViolationException => Invalid("duplicate").left
       case e => throw e
     }

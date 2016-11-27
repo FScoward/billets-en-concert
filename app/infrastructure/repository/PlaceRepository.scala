@@ -12,9 +12,8 @@ import scala.concurrent.ExecutionContext
  * Created by Fumiyasu on 2016/11/24.
  */
 class PlaceRepository {
-  def register(place: Place)(implicit ec: ExecutionContext): DBIO[Long] = {
-    val id = Id64.nextAscId()
-    (Places += PlacesRow(id, place.name, place.address)).map(_ => id)
+  def register(place: Place)(implicit ec: ExecutionContext): DBIO[Int] = {
+    Places += PlacesRow(place.id, place.name, place.address)
   }
 
   def update(id: Long, place: Place)(implicit ec: ExecutionContext): DBIO[Int] = {
@@ -28,7 +27,7 @@ class PlaceRepository {
       .filter(_.placeId === placeId.bind)
       .result
       .headOption
-      .map(_.map(p => Place(p.name, p.address)))
+      .map(_.map(p => Place(p.placeId, p.name, p.address)))
   }
 
 }

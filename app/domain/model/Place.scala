@@ -5,7 +5,7 @@ import play.api.libs.json.Json
 /**
  * Created by Fumiyasu on 2016/11/21.
  */
-case class Place(name: String, address: String) {
+case class Place(id: Long, name: String, address: String) {
   def update(name: String, address: String) = this.copy(name = name, address = address)
 }
 

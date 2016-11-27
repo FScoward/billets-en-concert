@@ -22,4 +22,12 @@ class ArtistRepositoryJDBC {
       .result
       .map(_.map(row => Artist(row.artistId, row.artistName)))
   }
+
+  def findBy(artistId: Long)(implicit ec: ExecutionContext): DBIO[Option[Artist]] = {
+    Artists
+      .filter(_.artistId === artistId.bind)
+      .result
+      .headOption
+      .map(_.map(row => Artist(row.artistId, row.artistName)))
+  }
 }
