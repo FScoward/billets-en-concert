@@ -3,7 +3,7 @@ package domain.service
 import java.time.LocalDateTime
 
 import controllers.model.LiveRequest
-import domain.model.{ Artist, Live }
+import domain.model.{ Artist, Live, Place }
 import util.Id64
 
 /**
@@ -11,20 +11,11 @@ import util.Id64
  */
 class LiveService {
 
-  def create(liveRequest: LiveRequest, place: Option[Long], artist: Option[Artist]) = {
-    val placeId = place match {
-      case None => Id64.nextAscId()
-      case _ => place.get
-    }
-    val artistModel = artist match {
-      case None => Artist(Id64.nextAscId(), liveRequest.artistName.getOrElse("unknown"))
-      case Some(a) => a
-    }
-
+  def create(liveRequest: LiveRequest, placeId: Long, artistId: Long) = {
     Live(
       Id64.nextAscId(),
       liveRequest.name,
-      artistModel.id,
+      artistId,
       LocalDateTime.parse(new ArrayCharSequence(liveRequest.startTime.toCharArray)),
       LocalDateTime.parse(new ArrayCharSequence(liveRequest.endTime.toCharArray)),
       placeId

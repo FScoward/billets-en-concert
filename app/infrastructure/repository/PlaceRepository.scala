@@ -30,4 +30,12 @@ class PlaceRepository {
       .map(_.map(p => Place(p.placeId, p.name, p.address)))
   }
 
+  def findBy(placeName: String)(implicit ec: ExecutionContext): DBIO[Option[Place]] = {
+    Places
+      .filter(_.name === placeName.bind)
+      .result
+      .headOption
+      .map(_.map(p => Place(p.placeId, p.name, p.address)))
+  }
+
 }
