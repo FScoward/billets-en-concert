@@ -23,6 +23,7 @@ class LiveService @Inject() (
     placeRepository: PlaceRepository,
     artistRepository: ArtistRepositoryJDBC,
     liveDomainService: domain.service.LiveService,
+    placeDomainService: domain.service.PlaceService,
     val dbConfigProvider: DatabaseConfigProvider
 ) extends HasDatabaseConfigProvider[JdbcProfile] with Logging {
   def create(liveRequest: LiveRequest)(implicit ec: ExecutionContext) = {
@@ -32,9 +33,10 @@ class LiveService @Inject() (
 
     //    val live = Live(Id64.nextAscId(), liveRequest.name, liveRequest.artistId, LocalDateTime.parse(new ArrayCharSequence(liveRequest.startTime.toCharArray)), LocalDateTime.parse(new ArrayCharSequence(liveRequest.endTime.toCharArray)), liveRequest.placeId)
     for {
-      place <- db.run(placeRepository.findBy(liveRequest.placeName))
-      // TODO: Move to Place Domain Service
-      placeModel = place.getOrElse(Place(Id64.nextAscId(), liveRequest.placeName, ""))
+      //      place <- db.run(placeRepository.findBy(liveRequest.placeName))
+      //       TODO: Move to Place Domain Service
+      //      placeModel = place.getOrElse(Place(Id64.nextAscId(), liveRequest.placeName, ""))
+      place <- db.run(placeDomainService.find(liveRequest.placeName))
       artist <- db.run(artistRepository.findBy(liveRequest.artistName))
       // TODO: Move to Artist Domain Service
       artistModel = artist match {
@@ -42,7 +44,7 @@ class LiveService @Inject() (
         case Some(a) => a
       }
       // NOTE: LIVEドメインとしてはplaceやartistがすでに存在しているかどうかは気にしない
-      live = liveDomainService.create(liveRequest, placeModel.id, artistModel.id)
+      live = liveDomainService.create(liveRequest, place.id, artistModel.id)
       _ <- db.run(liveRepository.store(live)).map(_.right)
     } yield live.right[Invalid]
   }

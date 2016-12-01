@@ -16,8 +16,10 @@ class LiveService {
       Id64.nextAscId(),
       liveRequest.name,
       artistId,
-      LocalDateTime.parse(new ArrayCharSequence(liveRequest.startTime.toCharArray)),
-      LocalDateTime.parse(new ArrayCharSequence(liveRequest.endTime.toCharArray)),
+      liveRequest.startTime,
+      liveRequest.endTime,
+      //      LocalDateTime.parse(new ArrayCharSequence(liveRequest.startTime.toCharArray)),
+      //      LocalDateTime.parse(new ArrayCharSequence(liveRequest.endTime.toCharArray)),
       placeId
     )
   }
